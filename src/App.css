@@ -1,42 +1,729 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.app-container {
+  min-height: 100vh;
+  background: url(https://m.media-amazon.com/images/I/814n33ZFugL._AC_SL1500_.jpg) center no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #4cc9f0;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: 3rem;
+  margin: 0;
+  background: linear-gradient(45deg, #4cc9f0, #3a93b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(76, 201, 240, 0.5);
+}
+
+.header p {
+  color: #ccc;
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.players-status {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 10px;
+}
+/* Продолжение App.css */
+
+.players-status h3 {
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-status-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  transition: all 0.3s ease;
+}
+
+.player-status-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.player-status-item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #4cc9f0;
+}
+
+.player-status-item span:first-of-type {
+  flex: 1;
+  color: #fff;
+  font-weight: 500;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.status.ready {
+  color: #2ecc71;
+  /*background: rgba(46, 204, 113, 0.2); 
+  border: 1px solid rgba(46, 204, 113, 0.3);*/
+}
+
+.status.choosing {
+  /*background: rgba(243, 156, 18, 0.2);*/
+  color: #f39c12;
+  /*border: 1px solid rgba(243, 156, 18, 0.3);*/
+}
+
+.race-controls {
+  /*position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;*/
+}
+
+.start-race-btn {
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #2ecc71, #27ae60);
+  border: none;
+  border-radius: 30px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-race-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(46, 204, 113, 0.6);
+}
+
+.start-race-btn:active {
+  transform: translateY(1px);
+}
+
+.start-race-btn:disabled {
+  background: #95a5a6;
+  box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.host-indicator {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(45deg, #f39c12, #e67e22);
+  padding: 10px 20px;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .header h1 {
+    font-size: 2.5rem;
+  }
+  
+  .header p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .app-container {
+    padding: 15px;
+  }
+  
+  .header {
+    margin-bottom: 30px;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .players-status {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 20px 0;
+    width: 100%;
+  }
+  
+  .race-controls {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 30px 0;
+    text-align: center;
+  }
+  
+  .start-race-btn {
+    position: relative;
+    left: auto;
+    transform: none;
+  }
+  
+  .start-race-btn:hover {
+    transform: translateY(-5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .header p {
+    font-size: 1rem;
+  }
+  
+  .start-race-btn {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+  }
+  
+  .players-status {
+    padding: 10px;
+  }
+  
+  .player-status-item {
+    padding: 6px;
+  }
+  
+  .player-status-item img {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 10px;
+  }
+  
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .header p {
+    font-size: 0.9rem;
+  }
+  
+  .start-race-btn {
+    padding: 12px 25px;
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+  
+  .host-indicator {
+    top: 10px;
+    left: 10px;
+    padding: 8px 15px;
+    font-size: 0.8rem;
+  }
+  
+  .players-list {
+    gap: 8px;
+  }
+  
+  .player-status-item {
+    font-size: 0.9rem;
+  }
+  
+  .status {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+}
+
+/* Анимации появления */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Улучшенная читаемость */
+.players-status {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ховер-эффекты для мобильных устройств */
+@media (hover: none) {
+  .player-status-item:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .start-race-btn:hover {
+    transform: translateX(-50%);
+  }
+  
+  .start-race-btn.active:hover {
+    transform: translateX(-50%);
+  }
+}
+
+/* Поддержка высокого DPI */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .header h1 {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Оптимизация анимаций */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .start-race-btn.active {
+    animation: none;
+  }
+  
+  .host-indicator {
+    animation: none;
+  }
+}
+
+/* Кастомный скроллбар */
+.players-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.players-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.players-list::-webkit-scrollbar-thumb {
+  background: rgba(76, 201, 240, 0.3);
+  border-radius: 3px;
+}
+
+.players-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(76, 201, 240, 0.5);
+}
+
+/* Состояние загрузки */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Гарантия видимости фокуса */
+.start-race-btn:focus-visible,
+.player-status-item:focus-visible {
+  outline: 2px solid #4cc9f0;
+  outline-offset: 2px;
+}
+
+/* Поддержка старых браузеров */
+@supports not (backdrop-filter: blur(10px)) {
+  .players-status {
+    background: rgba(0, 0, 0, 0.9);
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+/* Продолжение App.css */
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.readiness-info {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.readiness-indicator {
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 15px 30px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.readiness-indicator.ready {
+  /*color: white;
+  background: linear-gradient(45deg, #2ecc71, #27ae60);
+  box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
+  animation: pulse 2s infinite;*/
+}
+
+.readiness-indicator.waiting {
+  /*background: rgba(243, 156, 18, 0.2);*/
+  /*color: #f39c12;
+  border: 2px solid rgba(243, 156, 18, 0.3);*/
+}
+
+.ready-players-count {
+  font-size: 1rem;
+  color: #bdc3c7;
+  font-weight: 500;
+}
+
+.race-controls {
+  position: relative;
+  margin: 30px 0;
+}
+
+.waiting-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  white-space: nowrap;
+}
+
+.waiting-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid rgba(231, 76, 60, 0.9);
+}
+
+.instructions {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  margin: 20px 0;
+  max-width: 400px;
+  backdrop-filter: blur(10px);
+}
+
+.instructions h4 {
+  margin: 0 0 15px 0;
+  color: #4cc9f0;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.instructions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-@keyframes logo-spin {
+.instructions li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  padding-left: 25px;
+}
+
+.instructions li:last-child {
+  border-bottom: none;
+}
+
+.instructions li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #4cc9f0;
+  font-size: 1.2rem;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.player-avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #34495e;
+  transition: all 0.3s ease;
+}
+
+.player-avatar.my-avatar {
+  border-color: #4cc9f0;
+  box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+}
+
+.player-name {
+  flex: 1;
+  color: #ecf0f1;
+  font-weight: 500;
+}
+
+/* Анимация пульсации */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
+  }
+  50% {
+    box-shadow: 0 5px 30px rgba(46, 204, 113, 0.6);
+  }
+  100% {
+    box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main-content {
+    gap: 20px;
+    padding: 15px 0;
+  }
+  
+  .readiness-indicator {
+    font-size: 1.1rem;
+    padding: 12px 20px;
+  }
+  
+  .instructions {
+    padding: 15px;
+    margin: 15px 10px;
+  }
+  
+  .instructions li {
+    font-size: 0.9rem;
+  }
+  
+  .footer {
+    padding: 15px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .readiness-indicator {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+  
+  .instructions {
+    padding: 12px;
+  }
+  
+  .instructions li {
+    padding: 6px 0;
+    padding-left: 20px;
+    font-size: 0.8rem;
+  }
+  
+  .player-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .player-name {
+    font-size: 0.9rem;
+  }
+}
+
+/* Эффекты для темной темы */
+@media (prefers-color-scheme: dark) {
+  .instructions {
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Улучшенная доступность */
+.instructions li:focus,
+.player-status-item:focus {
+  outline: 2px solid #4cc9f0;
+  outline-offset: 2px;
+}
+
+/* Эффект появления */
+.main-content > * {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.main-content > *:nth-child(1) { animation-delay: 0.1s; }
+.main-content > *:nth-child(2) { animation-delay: 0.2s; }
+.main-content > *:nth-child(3) { animation-delay: 0.3s; }
+.main-content > *:nth-child(4) { animation-delay: 0.4s; }
+.main-content > *:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(20px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* Состояние загрузки */
+.skeleton-loading {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+  min-height: 20px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  100% {
+    background-position: -200% 0;
+  }
 }
