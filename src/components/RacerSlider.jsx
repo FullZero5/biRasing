@@ -7,10 +7,7 @@ import 'swiper/css/navigation';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import './RacerSlider.css';
 import logo from '../assets/logo.png'
-import solovkin from '../assets/solovkin.png'
-import valay from '../assets/valay.png'
-import oleg from '../assets/oleg.png'
-import olegY from '../assets/olegY.png'
+import racers from '../constants/racersData';
 
 const RacerSlider = ({ onSelectRacer, selectedRacer, isRacerTaken }) => {
   const [swiper, setSwiper] = useState(null);
@@ -19,48 +16,7 @@ const RacerSlider = ({ onSelectRacer, selectedRacer, isRacerTaken }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
-  const racers = [
-    {
-      id: 1,
-      name: "СОЛОВКИН СЕРГЕЙ",
-      image: solovkin,
-      bgImage: "https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1536405223/starwars/item-4-bg.webp",
-      color: "#e74c3c",
-      speed: "320 км/ч",
-      acceleration: "3.2s",
-      power: "850 л.с."
-    },
-    {
-      id: 2,
-      name: "КУРОПАТКИНА ВАЛЕНТИНА",
-      image: valay,
-      bgImage: "https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1536405223/starwars/item-4-bg.webp",
-      color: "#3498db",
-      speed: "340 км/ч",
-      acceleration: "2.9s",
-      power: "920 л.с."
-    },
-    {
-      id: 3,
-      name: "МАНДРИЧЕНКО ОЛЕГ",
-      image: oleg,
-      bgImage: "https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1536405223/starwars/item-4-bg.webp",
-      color: "#2ecc71",
-      speed: "360 км/ч",
-      acceleration: "2.5s",
-      power: "1050 л.с."
-    },
-    {
-      id: 4,
-      name: "ЯРИГА ОЛЕГ",
-      image: olegY,
-      bgImage: "https://res.cloudinary.com/muhammederdem/image/upload/q_60/v1536405223/starwars/item-4-bg.webp",
-      color: "#f1c40f",
-      speed: "330 км/ч",
-      acceleration: "3.0s",
-      power: "880 л.с."
-    }
-  ];
+  
 
   useEffect(() => {
     if (productImgRef.current) {

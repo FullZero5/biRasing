@@ -1,345 +1,173 @@
+/* RaceScreen.css */
 .race-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #0c1e2c 0%, #1a3b5c 100%);
-    z-index: 1000;
-    overflow: hidden;
-  }
-  
-  .race-track {
-    position: absolute;
-    top: 50%;
-    left: 5%;
-    width: 90%;
-    height: 200px;
-    background: linear-gradient(90deg, #2c3e50, #34495e);
-    border: 4px solid #7f8c8d;
-    border-radius: 10px;
-    transform: translateY(-50%);
-    overflow: hidden;
-  }
-  
-  .race-track::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 20px,
-      #f1c40f 20px,
-      #f1c40f 40px
-    );
-    transform: translateY(-50%);
-  }
-  
-  .finish-line {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 10px;
-    height: 100%;
-    background: repeating-linear-gradient(
-      transparent,
-      transparent 10px,
-      #fff 10px,
-      #fff 20px
-    );
-    box-shadow: -5px 0 20px rgba(255, 255, 255, 0.5);
-  }
-  
-  .racer-on-track {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: left 0.5s ease-out;
-    text-align: center;
-  }
-  
-  .racer-on-track.winner {
-    animation: winner-pulse 1s infinite;
-  }
-  
-  @keyframes winner-pulse {
-    0%, 100% { transform: translateY(-50%) scale(1); }
-    50% { transform: translateY(-50%) scale(1.1); }
-  }
-  
-  .race-racer-img {
-    width: 60px;
-    height: 60px;
-    filter: drop-shadow(0 0 15px currentColor);
-    transition: all 0.3s ease;
-  }
-  
-  .racer-name-tag {
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    margin-top: 5px;
-    white-space: nowrap;
-  }
-  
-  .progress-bar {
-    width: 80px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 2px;
-    margin-top: 5px;
-    overflow: hidden;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    transition: width 0.5s ease;
-  }
-  
-  .race-info-panel {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 20px;
-    border-radius: 15px;
-    color: white;
-    min-width: 250px;
-    backdrop-filter: blur(10px);
-  }
-  
-  .race-timer {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #f1c40f;
-  }
-  
-  .race-leaderboard {
-    margin-bottom: 20px;
-  }
-  
-  .race-leaderboard h3 {
-    text-align: center;
-    margin: 0 0 15px 0;
-    color: #f1c40f;
-  }
-  
-  .leaderboard-item {
-    display: flex;
-    align-items: center;
-    padding: 8px;
-    margin: 5px 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    transition: all 0.3s ease;
-  }
-  
-  .leaderboard-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateX(-5px);
-  }
-  
-  .position {
-    font-weight: bold;
-    margin-right: 10px;
-    color: #f1c40f;
-    min-width: 30px;
-  }
-  
-  .racer-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 10px;
-  }
-  
-  .player-name {
-    flex: 1;
-    font-weight: 500;
-  }
-  
-  .progress {
-    margin: 0 10px;
-    color: #bdc3c7;
-    font-size: 0.9rem;
-  }
-  
-  .finished {
-    color: #2ecc71;
-    font-weight: bold;
-  }
-  
-  .winner-announcement {
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #f39c12, #e67e22);
-    border-radius: 15px;
-    margin: 20px 0;
-    animation: celebrate 2s infinite;
-  }
-  
-  @keyframes celebrate {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-  
-  .winner-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: white;
-  }
-  
-  .winner-name {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 5px;
-    color: white;
-  }
-  
-  .winner-racer {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    color: rgba(255, 255, 255, 0.9);
-  }
-  
-  .winner-time {
-    font-size: 1.2rem;
-    color: #f1c40f;
-    font-weight: bold;
-  }
-  
-  .back-to-lobby-btn {
-    width: 100%;
-    padding: 12px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .back-to-lobby-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
-  }
-  
-  .race-effects {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-  
-  .speed-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 50px,
-      rgba(255, 255, 255, 0.1) 50px,
-      rgba(255, 255, 255, 0.1) 100px
-    );
-    animation: speedEffect 0.5s linear infinite;
-    opacity: 0.5;
-  }
-  
-  @keyframes speedEffect {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100px); }
-  }
-  
-  .countdown {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 8rem;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.2);
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
-    animation: countdownPulse 1s infinite;
-  }
-  
-  @keyframes countdownPulse {
-    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-  }
-  
-  /* Адаптивность */
-  @media (max-width: 768px) {
-    .race-track {
-      height: 150px;
-      left: 2%;
-      width: 96%;
-    }
-    
-    .race-racer-img {
-      width: 40px;
-      height: 40px;
-    }
-    
-    .racer-name-tag {
-      font-size: 10px;
-      padding: 2px 6px;
-    }
-    
-    .race-info-panel {
-      top: 10px;
-      right: 10px;
-      left: 10px;
-      min-width: auto;
-    }
-    
-    .countdown {
-      font-size: 4rem;
-    }
-    
-    .winner-announcement {
-      padding: 15px;
-    }
-    
-    .winner-title {
-      font-size: 1.2rem;
-    }
-    
-    .winner-name {
-      font-size: 1.4rem;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .race-track {
-      height: 120px;
-    }
-    
-    .race-racer-img {
-      width: 30px;
-      height: 30px;
-    }
-    
-    .leaderboard-item {
-      padding: 6px;
-      font-size: 0.9rem;
-    }
-    
-    .progress {
-      font-size: 0.8rem;
-    }
-  }
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+}
+
+.race-header {
+  background: #2c3e50;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.race-title h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.race-subtitle {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.race-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.start-button, .reset-button, .back-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.start-button {
+  background: #27ae60;
+  color: white;
+}
+
+.start-button:disabled {
+  background: #7f8c8d;
+  cursor: not-allowed;
+}
+
+.reset-button {
+  background: #e74c3c;
+  color: white;
+}
+
+.back-button {
+  background: #3498db;
+  color: white;
+}
+
+.race-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 60px);
+}
+
+.map-container {
+  flex: 3;
+  position: relative;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.loading-spinner {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.debug-info {
+  font-size: 10px;
+  text-align: left;
+  max-height: 100px;
+  overflow-y: auto;
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.race-sidebar {
+  flex: 1;
+  background: #ecf0f1;
+  min-width: 250px;
+  max-width: 300px;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.leaderboard h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+}
+
+.racers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.racer-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  gap: 8px;
+}
+
+.racer-position {
+  font-weight: bold;
+  min-width: 30px;
+}
+
+.racer-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.racer-name {
+  flex: 1;
+}
+
+.racer-progress {
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.debug-panel {
+  margin-top: 20px;
+  padding: 10px;
+  background: #34495e;
+  color: white;
+  border-radius: 4px;
+  color:black;
+}
+
+.debug-panel h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+
+.debug-panel pre {
+  font-size: 10px;
+  margin: 0;
+  white-space: pre-wrap;
+}

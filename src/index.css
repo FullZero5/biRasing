@@ -54,40 +54,6 @@ a {
   }
 }
 
-.content {
-  height: 600px;
-  margin: auto;
-  width: 100%;
-  max-width: 1050px;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-@media screen and (max-width: 1200px) {
-  .content {
-    max-width: 920px;
-  }
-}
-@media screen and (max-width: 992px) {
-  .content {
-    max-width: 920px;
-    margin-top: 100px;
-    height: auto;
-    min-height: 100vh;
-  }
-}
-@media screen and (max-width: 767px) {
-  .content {
-    margin-top: 20px;
-  }
-}
-@media screen and (max-width: 576px) {
-  .content {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-}
-
 .bg-shape {
   height: 100%;
   background-image: linear-gradient(-45deg, #cc3843 0%, #cb193f 100%);

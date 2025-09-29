@@ -96,7 +96,7 @@ const App = () => {
 
         {/* Статус игроков */}
         <div className="players-status">
-          <h3>Статус игроков:</h3>
+          <h3>Статус игроков</h3>
           <div className="players-list">
             {players.map(player => {
               const playerRacer = playerChoices[player.id];
