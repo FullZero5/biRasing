@@ -1,5 +1,5 @@
 .app-container {
-  min-height: 100vh;
+  min-height: calc(100vh - 4rem);
   background: url(https://m.media-amazon.com/images/I/814n33ZFugL._AC_SL1500_.jpg) center no-repeat;
   background-size: cover;
   position: relative;
@@ -62,6 +62,7 @@
 .players-status h3 {
   margin: 0 0 15px 0;
   font-size: 1.1rem;
+  color:#ccc;
 }
 
 .players-list {
@@ -491,12 +492,14 @@
   background: linear-gradient(45deg, #2ecc71, #27ae60);
   box-shadow: 0 5px 20px rgba(46, 204, 113, 0.3);
   animation: pulse 2s infinite;*/
+  color:#ccc;
 }
 
 .readiness-indicator.waiting {
   /*background: rgba(243, 156, 18, 0.2);*/
   /*color: #f39c12;
   border: 2px solid rgba(243, 156, 18, 0.3);*/
+  color:#ccc;
 }
 
 .ready-players-count {
