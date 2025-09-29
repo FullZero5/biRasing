@@ -414,7 +414,7 @@ const RaceScreen = ({ onBackToLobby }) => {
             {raceStatus === "finished" && " - ФИНИШ!"}
           </div>
         </div>
-        
+        {isHost() && (
         <div className="race-controls">
           {raceStatus === "waiting" && (
             <button 
@@ -437,7 +437,7 @@ const RaceScreen = ({ onBackToLobby }) => {
           <button onClick={onBackToLobby} className="btn back-button">
             ← Лобби
           </button>
-        </div>
+        </div>)}
       </div>
 
       <div className="race-container">
