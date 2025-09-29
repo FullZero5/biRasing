@@ -22,13 +22,14 @@ import FastRaceCamera from './RaceCamera';
 mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 const language =  new MapboxLanguage({ defaultLanguage: 'ru' });
 
-
-
 const RaceScreen = ({ onBackToLobby }) => {
   const players = usePlayersList();
   const [playerChoices] = useMultiplayerState("racerChoices", {});
-  console.log(playerChoices)
-  // ✅ ИЗМЕНЕНО: Синхронизируем только время старта и настройки
+  
+  // ✅ ДОБАВЛЕНО: Состояние финиша
+  const [finishedRacers, setFinishedRacers] = useMultiplayerState("finishedRacers", {});
+  const [raceResults, setRaceResults] = useMultiplayerState("raceResults", []);
+  
   const [selectedCity, setSelectedCity] = useMultiplayerState("selectedCity", null);
   const [raceStartTime, setRaceStartTime] = useMultiplayerState("raceStartTime", null);
   const [raceStatus, setRaceStatus] = useMultiplayerState("raceStatus", "waiting");
@@ -79,21 +80,77 @@ const RaceScreen = ({ onBackToLobby }) => {
     return smoothRoute[Math.min(pointIndex, smoothRoute.length - 1)];
   }, [smoothRoute]);
 
-  // ✅ ОСНОВНАЯ ФУНКЦИЯ: Вычисление текущей позиции гонщика
+  // ✅ ОБНОВЛЕНО: Вычисление текущей позиции гонщика с контролем финиша
   const calculateRacerPosition = useCallback((racerId) => {
     if (!raceStartTime || raceStatus !== "racing") return 0;
+    
+    // Если гонщик уже финишировал, возвращаем 100%
+    if (finishedRacers[racerId]) {
+      return 1.0;
+    }
     
     const settings = racerSettings[racerId];
     if (!settings) return 0;
     
     // Вычисляем прогресс на основе времени
     const elapsedTime = Date.now() - raceStartTime;
-    const position = elapsedTime  * settings.speed * 0.1; // позиция = время * скорость
+    const position = elapsedTime * settings.speed * 0.1;
     
-    return Math.min(position, 1.0); // Ограничиваем 100%
-  }, [raceStartTime, raceStatus, racerSettings]);
+    return Math.min(position, 1.0);
+  }, [raceStartTime, raceStatus, racerSettings, finishedRacers]);
 
-  // ✅ ФУНКЦИЯ ОБНОВЛЕНИЯ МАРКЕРОВ
+  // ✅ НОВАЯ ФУНКЦИЯ: Проверка финиша гонщиков
+  const checkRaceFinish = useCallback(() => {
+    if (!isHost() || raceStatus !== "racing") return;
+
+    const newFinishedRacers = { ...finishedRacers };
+    const newRaceResults = [...raceResults];
+    let hasNewFinishes = false;
+
+    activeRacers.forEach(player => {
+      const playerId = player.id;
+      
+      // Если игрок еще не финишировал и достиг 100%
+      if (!newFinishedRacers[playerId]) {
+        const position = calculateRacerPosition(playerId);
+        
+        if (position >= 1.0 && !newFinishedRacers[playerId]) {
+          console.log(`🏁 Игрок ${playerId} финишировал!`);
+          newFinishedRacers[playerId] = {
+            finishTime: Date.now(),
+            position: position
+          };
+          
+          // Добавляем в результаты с временем финиша
+          const finishTime = Date.now() - raceStartTime;
+          newRaceResults.push({
+            playerId: playerId,
+            name: player.getProfile()?.name || `Игрок ${playerId.slice(0, 4)}`,
+            finishTime: finishTime,
+            finishPosition: Object.keys(newFinishedRacers).length
+          });
+          
+          hasNewFinishes = true;
+        }
+      }
+    });
+
+    if (hasNewFinishes) {
+      setFinishedRacers(newFinishedRacers);
+      setRaceResults(newRaceResults.sort((a, b) => a.finishTime - b.finishTime));
+    }
+
+    // ✅ ДОБАВЛЕНО: Проверка завершения гонки
+    const finishedCount = Object.keys(newFinishedRacers).length;
+    const totalRacers = activeRacers.length;
+    
+    if (finishedCount === totalRacers && totalRacers > 0 && raceStatus === "racing") {
+      console.log("🎉 Все гонщики финишировали! Гонка завершена.");
+      setRaceStatus("finished");
+    }
+  }, [activeRacers, calculateRacerPosition, finishedRacers, raceResults, raceStatus, raceStartTime, isHost()]);
+
+  // ✅ ОБНОВЛЕННАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ МАРКЕРОВ
   const updateAllMarkers = useCallback(() => {
     activeRacers.forEach(player => {
       const marker = playerMarkersRef.current[player.id];
@@ -105,7 +162,10 @@ const RaceScreen = ({ onBackToLobby }) => {
         }
       }
     });
-  }, [activeRacers, calculateRacerPosition, getPositionCoords]);
+
+    // Проверяем финиш на каждом кадре анимации
+    checkRaceFinish();
+  }, [activeRacers, calculateRacerPosition, getPositionCoords, checkRaceFinish]);
 
   // ✅ ЕДИНЫЙ ЭФФЕКТ АНИМАЦИИ ДЛЯ ВСЕХ КЛИЕНТОВ
   useEffect(() => {
@@ -132,7 +192,7 @@ const RaceScreen = ({ onBackToLobby }) => {
     };
   }, [raceStatus, smoothRoute, updateAllMarkers]);
 
-  // ✅ ИНИЦИАЛИЗАЦИЯ НАСТРОЕК ГОНКИ (ТОЛЬКО ХОСТ)
+  // ✅ ОБНОВЛЕННАЯ ИНИЦИАЛИЗАЦИЯ НАСТРОЕК ГОНКИ
   useEffect(() => {
     if (activeRacers.length === 0 || !smoothRoute.length || !isHost()) return;
 
@@ -143,7 +203,7 @@ const RaceScreen = ({ onBackToLobby }) => {
       const settings = {};
       activeRacers.forEach(player => {
         settings[player.id] = {
-          speed: 0.0005 + Math.random() * 0.0003, // Более реалистичная скорость
+          speed: 0.0005 + Math.random() * 0.0003,
           name: player.getProfile()?.name || `Игрок ${player.id.slice(0, 4)}`
         };
       });
@@ -160,6 +220,14 @@ const RaceScreen = ({ onBackToLobby }) => {
       setSelectedCity(city);
     }
   }, [selectedCity, players]);
+
+  // ✅ ДОБАВЛЕНО: Сброс состояния финиша при рестарте
+  useEffect(() => {
+    if (raceStatus === "waiting" && Object.keys(finishedRacers).length > 0 && isHost()) {
+      setFinishedRacers({});
+      setRaceResults([]);
+    }
+  }, [raceStatus, finishedRacers, isHost()]);
 
   // ОСНОВНАЯ ИНИЦИАЛИЗАЦИЯ КАРТЫ
   useEffect(() => {
@@ -205,11 +273,11 @@ const RaceScreen = ({ onBackToLobby }) => {
     if (!map.current || !smoothRoute.length) return;
 
     try {
-
       map.current.addSource('race-route', {
         type: 'geojson',
         data: {
           type: 'Feature',
+          properties: {},
           geometry: {
             type: 'LineString',
             coordinates: smoothRoute
@@ -221,11 +289,24 @@ const RaceScreen = ({ onBackToLobby }) => {
         id: 'route-line',
         type: 'line',
         source: 'race-route',
+        layout: {
+            "line-join": 'round',
+            "line-cap": 'round'
+        },
         paint: {
           'line-color': '#ff0000',
           'line-width': 4
         }
       });
+
+      // ✅ ДОБАВЛЕНО: Маркер финиша
+      if (smoothRoute.length > 0) {
+        const finishCoords = smoothRoute[smoothRoute.length - 1];
+        const finishMarker = new mapboxgl.Marker({ color: '#00ff00' })
+          .setLngLat(finishCoords)
+          .setPopup(new mapboxgl.Popup().setHTML('<h3>🏁 Финиш</h3>'))
+          .addTo(map.current);
+      }
 
       createPlayerMarkers();
     } catch (error) {
@@ -274,6 +355,9 @@ const RaceScreen = ({ onBackToLobby }) => {
     console.log("🏁 Запуск гонки...");
     setRaceStartTime(Date.now());
     setRaceStatus("racing");
+    // Сбрасываем результаты предыдущей гонки
+    setFinishedRacers({});
+    setRaceResults([]);
   };
 
   const resetRace = () => {
@@ -282,6 +366,8 @@ const RaceScreen = ({ onBackToLobby }) => {
     console.log("🔄 Сброс гонки...");
     setRaceStatus("waiting");
     setRaceStartTime(null);
+    setFinishedRacers({});
+    setRaceResults([]);
     
     // Сбрасываем позиции маркеров
     activeRacers.forEach(player => {
@@ -297,21 +383,31 @@ const RaceScreen = ({ onBackToLobby }) => {
     return activeRacers.map(player => {
       const position = calculateRacerPosition(player.id);
       const settings = racerSettings[player.id];
+      const hasFinished = finishedRacers[player.id];
       
       return {
         player,
         position,
-        finished: position >= 1.0,
-        name: settings?.name || 'Игрок'
+        finished: hasFinished,
+        name: settings?.name || 'Игрок',
+        finishTime: hasFinished ? raceResults.find(r => r.playerId === player.id)?.finishTime : null
       };
-    }).sort((a, b) => b.position - a.position);
-  }, [activeRacers, calculateRacerPosition, racerSettings]);
+    }).sort((a, b) => {
+      // Сначала сортируем по финишу, потом по позиции
+      if (a.finished && !b.finished) return -1;
+      if (!a.finished && b.finished) return 1;
+      if (a.finished && b.finished) {
+        return (a.finishTime || 0) - (b.finishTime || 0);
+      }
+      return b.position - a.position;
+    });
+  }, [activeRacers, calculateRacerPosition, racerSettings, finishedRacers, raceResults]);
 
   return (
     <div className="race-screen">
       <div className="race-header">
         <div className="race-title">
-          <h2>🏁 Велогонка {isHost() && "👑"}</h2>
+          <h2>Велогонка {isHost() && "👑"}</h2>
           <div className="race-subtitle">
             {selectedCity ? `Город: ${selectedCity.name}` : "Выбор города..."}
             {raceStatus === "racing" && " - ГОНКА!"}
@@ -323,22 +419,22 @@ const RaceScreen = ({ onBackToLobby }) => {
           {raceStatus === "waiting" && (
             <button 
               onClick={startRace} 
-              className="start-button" 
+              className="btn start-button" 
               disabled={activeRacers.length === 0 || !isHost()}
             >
-              🏁 Старт ({activeRacers.length})
+              Старт ({activeRacers.length})
             </button>
           )}
           {(raceStatus === "racing" || raceStatus === "finished") && (
             <button 
               onClick={resetRace} 
-              className="reset-button"
+              className="btn reset-button"
               disabled={!isHost()}
             >
-              🔄 Сброс
+              Сброс
             </button>
           )}
-          <button onClick={onBackToLobby} className="back-button">
+          <button onClick={onBackToLobby} className="btn back-button">
             ← Лобби
           </button>
         </div>
@@ -362,7 +458,13 @@ const RaceScreen = ({ onBackToLobby }) => {
 
         <div className="race-sidebar">
           <div className="leaderboard">
-            <h3>🏆 Гонщики ({activeRacers.length})</h3>
+            <h3>Гонщики ({activeRacers.length})</h3>
+            {raceStatus === "finished" && (
+              <div className="race-finished-banner">
+                <h4>🎉 Гонка завершена!</h4>
+                <p>Победитель: {leaderboard[0]?.name}</p>
+              </div>
+            )}
             {activeRacers.length === 0 ? (
               <div className="no-racers">
                 <p>Нет участников</p>
@@ -370,15 +472,21 @@ const RaceScreen = ({ onBackToLobby }) => {
             ) : (
               <div className="racers-list">
                 {leaderboard.map((item, index) => (
-                  <div key={item.player.id} className="racer-item">
-                    <div className="racer-position">#{index + 1}</div>
+                  <div key={item.player.id} className={`racer-item ${item.finished ? 'finished' : ''}`}>
+                    <div className="racer-position">
+                      {item.finished ? `${index + 1}` : `#${index + 1}`}
+                    </div>
                     <div className="racer-color" 
                          style={{ backgroundColor: playerChoices[item.player.id]?.color }} />
-                    <div className="racer-name">{playerChoices[item.player.id]?.name }</div>
+                    <div className="racer-name">{playerChoices[item.player.id]?.name}</div>
                     <div className="racer-progress">
-                      {Math.round(item.position * 100)}%
-                      {item.finished && " 🏁"}
+                      {item.finished && "🏁"}
                     </div>
+                    {item.finished && item.finishTime && (
+                      <div className="finish-time">
+                        {((item.finishTime || 0) / 1000).toFixed(1)}с
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
