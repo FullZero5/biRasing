@@ -1,73 +1,55 @@
-/* RaceScreen.css */
+/* RaceScreen.css - Modern Minimalism */
+:root {
+  /* Color Palette */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success: #16a34a;
+  --success-hover: #15803d;
+  --background: #0a0a0a;
+  --surface: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --border: #27272a;
+  --accent: #3b82f6;
+  
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
+  --space-2xl: 24px;
+  
+  /* Effects */
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+/* Reset and Base */
 .race-screen {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, sans-serif;
-}
-
-.race-header {
-  background: #2c3e50;
-  color: white;
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.race-title h2 {
   margin: 0;
-  font-size: 24px;
-}
-
-.race-subtitle {
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-.race-controls {
-  display: flex;
-  gap: 10px;
-}
-
-.start-button, .reset-button, .back-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.start-button {
-  background: #27ae60;
-  color: white;
-}
-
-.start-button:disabled {
-  background: #7f8c8d;
-  cursor: not-allowed;
-}
-
-.reset-button {
-  background: #e74c3c;
-  color: white;
-}
-
-.back-button {
-  background: #3498db;
-  color: white;
-}
-
-.race-container {
-  display: flex;
-  flex: 1;
-  height: calc(100vh - 60px);
-}
-
-.map-container {
-  flex: 3;
+  padding: 0;
+  /*font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;*/
+  background: var(--background);
+  color: var(--text-primary);
   position: relative;
+  overflow: hidden;
+}
+
+/* Full Screen Map */
+.map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 .map-wrapper {
@@ -75,99 +57,311 @@
   height: 100%;
 }
 
-.map-loading {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* Header - Top Right */
+.race-header {
+  position: fixed;
+  top: var(--space-xl);
+  right: var(--space-xl);
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-lg);
+  min-width: 280px;
 }
 
-.loading-spinner {
-  font-size: 30px;
-  margin-bottom: 10px;
+.race-title h2 {
+  margin: 0 0 var(--space-xs) 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
-.debug-info {
-  font-size: 10px;
-  text-align: left;
-  max-height: 100px;
-  overflow-y: auto;
-  background: #f8f9fa;
-  padding: 8px;
-  border-radius: 4px;
-  margin-top: 10px;
+.race-subtitle {
+  margin: 0 0 var(--space-lg) 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  font-weight: 600;
 }
 
-.race-sidebar {
+/* Controls */
+.race-controls {
+  display: flex;
+  /*gap: var(--space-sm);*/
+  flex-wrap: wrap;
+}
+
+/* Modern Button Base */
+.btn {
+  padding: var(--space-md) var(--space-lg);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  line-height: 1;
   flex: 1;
-  background: #ecf0f1;
-  min-width: 250px;
-  max-width: 300px;
-  padding: 15px;
+  min-width: 80px;
+  text-align: center;
+  
+  /* Modern focus */
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Button Variants */
+.start-button {
+  background: var(--success);
+  color: white;
+  
+  &:hover:not(:disabled) {
+    background: var(--success-hover);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.start-button:disabled {
+  background: var(--border);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reset-button {
+  background: var(--danger);
+  color: white;
+  
+  &:hover {
+    background: var(--danger-hover);
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.back-button {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent);
+  }
+}
+
+/* Sidebar - Left Side */
+.race-sidebar {
+  position: fixed;
+  top: var(--space-xl);
+  left: var(--space-xl);
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.9);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-lg);
+  width: 320px;
+  max-height: calc(100vh - 2 * var(--space-xl));
   overflow-y: auto;
 }
 
 .leaderboard h3 {
-  margin: 0 0 15px 0;
-  color: #2c3e50;
+  margin: 0 0 var(--space-lg) 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .racers-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-sm);
 }
 
 .racer-item {
   display: flex;
   align-items: center;
-  padding: 8px;
-  background: white;
-  border-radius: 4px;
-  gap: 8px;
+  padding: var(--space-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  gap: var(--space-md);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--accent);
+  }
 }
 
 .racer-position {
-  font-weight: bold;
-  min-width: 30px;
+  font-weight: 600;
+  /*min-width: 24px;*/
+  color: var(--text-primary);
+  font-feature-settings: 'tnum';
 }
 
 .racer-color {
   width: 12px;
   height: 12px;
   border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
 }
 
 .racer-name {
   flex: 1;
+  color: var(--text-primary);
+  font-weight: 500;
 }
 
 .racer-progress {
-  font-weight: bold;
-  color: #27ae60;
+  font-weight: 600;
+  color: var(--success);
+  font-feature-settings: 'tnum';
 }
 
+/* Loading State */
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2xl);
+  text-align: center;
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  /* Центрирование содержимого */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+.loading-spinner {
+  font-size: 2rem;
+  /*margin-bottom: var(--space-lg);*/
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Debug Panel */
 .debug-panel {
-  margin-top: 20px;
-  padding: 10px;
-  background: #34495e;
-  color: white;
-  border-radius: 4px;
-  color:black;
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(39, 39, 42, 0.8);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 .debug-panel h4 {
-  margin: 0 0 10px 0;
-  font-size: 14px;
+  margin: 0 0 var(--space-md) 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .debug-panel pre {
-  font-size: 10px;
+  font-size: 0.75rem;
   margin: 0;
   white-space: pre-wrap;
+  /*font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;**/
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.debug-info {
+  font-size: 0.75rem;
+  max-height: 100px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.3);
+  padding: var(--space-sm);
+  border-radius: var(--radius);
+  margin-top: var(--space-md);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .race-sidebar {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .race-header {
+    top: var(--space-md);
+    right: var(--space-md);
+    left: var(--space-md);
+    min-width: auto;
+  }
+  
+  .race-sidebar {
+    top: auto;
+    bottom: var(--space-md);
+    left: var(--space-md);
+    right: var(--space-md);
+    width: auto;
+    max-height: 40vh;
+  }
+  
+  .race-controls {
+    flex-direction: column;
+  }
+  
+  .btn {
+    flex: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .racer-item {
+    transition: none;
+  }
+  
+  .loading-spinner {
+    animation-duration: 2s;
+  }
+}
+
+/* High Contrast */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #000000;
+    --background: #ffffff;
+    --text-primary: #000000;
+  }
+  
+  .race-header,
+  .race-sidebar,
+  .map-loading {
+    background: #ffffff;
+    border: 2px solid #000000;
+  }
 }
