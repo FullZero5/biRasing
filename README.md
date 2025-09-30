@@ -1,8 +1,47 @@
-# React + Vite
+# BICYCLE RACING
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Описание
+biRasing — это эмулятор  гонки с мультиплейером на React, Playroom.
 
-Currently, two official plugins are available:
+## Технологии
+- **React**: Библиотека для создания пользовательских интерфейсов (18  версия есть зависимость с Playroom Kit).
+- **Vite**: Быстрый сборщик для современных веб-приложений.
+- **Playroom**: Playroom Kit упрощает разработку многопользовательских веб-игр в реальном времени, предлагая функции бесшовной синхронизации и управления состоянием.
+- **Mapbox GL JS**: — клиентская библиотека JavaScript для создания веб-карт и веб-приложений с использованием современной картографической технологии Mapbox.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Установка
+
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/FullZero5/biRasing.git
+   ```
+2. Перейдите в папку:
+   ```bash
+   cd biRasing
+   ```
+3. Установите зависимости:
+   ```bash
+   npm install
+   ```
+4. Запуск:
+   ```bash
+   npm run dev
+   ```
+   
+### Идея
+  Коллеги опаздывали на созвоны и родилась идея тотализатора кто прийдет первым, итог вылился в эту реализоцию.
+  
+#### Что реализовано
+- Мультиплейер из коробки.
+- Выбор персонажа (RacerSlider.jsx).
+- Симуляция гонки (RaceScreen.jsx).
+- Используем карты Mapbox (Загрузка карты, построение маршрута, движение меток по маршруту).
+- Простая логика определения победителя и симуляции гонки.
+
+
+#### Что хотелось бы
+- Реальные характеристики гонщиков
+- Система событий в гонке (+/-) которые бы негативно или положительно влияли на гонщика
+- Более плавное движение гонщиков и камеры (интерполяции и все такое)
+- Возможно спрайты персонажей
+- Система ставок
